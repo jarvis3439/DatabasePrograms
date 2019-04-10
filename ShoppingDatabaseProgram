@@ -1,0 +1,43 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package database;
+
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ *
+ * @author Administrator
+ */
+public class DatabaseConnectivity {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        String driver = "com.mysql.cj.jdbc.Driver";
+        Class.forName(driver);
+        String url = "jdbc:mysql://localhost:3306/shopping_database";
+        Connection connection = DriverManager.getConnection(url, "root", "");
+        Statement st = (Statement) connection.createStatement();
+        String q = "select c.id, s.name, c.quantity, s.price, s.price*c.quantity from shopping_items s, shopping_cart c where c.item_id = s.id";
+        ResultSet rs = st.executeQuery(q);
+        double grand = 0;
+        while(rs.next()) {
+            int cart = rs.getInt(1);
+            String name = rs.getString(2);
+            int qty = rs.getInt(3);
+            int price = rs.getInt(4);
+            int total = rs.getInt(5);
+            grand+=total;
+            System.out.println("CartId : " + cart + " Product Name : " + name + "Qty : " + qty + " Price : " + price + "Total : " + total);
+        }
+        System.out.println("Grand Total : " + grand);
+        
+        
+        
+    }
+    
+}
