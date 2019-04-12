@@ -1,0 +1,64 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package database;
+
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Administrator
+ */
+public class DatabaseConnectivity {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        String driver = "com.mysql.cj.jdbc.Driver";
+        Class.forName(driver);
+        String url = "jdbc:mysql://localhost:3306/shopping_database";
+        Connection connection = DriverManager.getConnection(url, "root", "");
+        Statement st = (Statement) connection.createStatement();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter Product name, Price");
+        String name = scanner.nextLine();
+        int price = scanner.nextInt();
+        
+        String sel = "select name from category_items";
+        ResultSet rs = st.executeQuery(sel);
+        while(rs.next()){
+            System.out.println(rs.getString("name"));
+        }
+        System.out.println("Choose Category : ");
+        String cname = scanner.next();
+        
+        //String q = "update shopping_items set name = '" + upname + "' where name = '" + name + "'";
+        //String deleteQuery = "DELETE FROM `shopping_items` WHERE name = '" + name + "'";
+        String cq = "select id from category_items where name = '" + cname + "'";
+        ResultSet rs2 = st.executeQuery(cq);
+        rs2.next();
+        int cid = rs2.getInt("id");
+        String q = "INSERT INTO `shopping_items`(`name`, `price`, `category_id`) VALUES ('"+ name +"',"+ price +"," + cid + ")";
+        int rs1 = st.executeUpdate(q);
+        /*
+        double grand = 0;
+        while(rs.next()) {
+            int cart = rs.getInt(1);
+            String name = rs.getString(2);
+            int qty = rs.getInt(3);
+            int price = rs.getInt(4);
+            int total = rs.getInt(5);
+            grand+=total;
+            System.out.println("CartId : " + cart + " Product Name : " + name + "Qty : " + qty + " Price : " + price + "Total : " + total);
+        }
+        System.out.println("Grand Total : " + grand);
+        */
+        
+        
+    }
+    
+}
